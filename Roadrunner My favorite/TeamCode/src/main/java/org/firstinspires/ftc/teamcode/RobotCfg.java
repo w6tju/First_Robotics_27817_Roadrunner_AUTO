@@ -26,12 +26,12 @@ public class RobotCfg {
     //Presets
     @Config
     public static class Presets {
-        public static Preset Specimen_Intake = new Preset(580,0,0.6);
+        public static Preset Specimen_Intake = new Preset(595,0,0.6);
         public static Preset Enter_Sub = new Preset(4490,0,0.5); // preset for intaking a sample (currently certain death)
         public static Preset Basket_Low = new Preset(0,0,0); // preset for scoring in the low basket
-        public static Preset Basket_High = new Preset(1482,0,0.5); // preset for scoring in the high basket
+        public static Preset Basket_High = new Preset(1525,0,0.5); // preset for scoring in the high basket
         public static Preset Specemin_Low = new Preset(0,0,0); // preset for scoring a specemin on the low bar
-        public static Preset Specemin_High = new Preset(1607,0,0.4); // preset for scoring a specemin on the high bar
+        public static Preset Specemin_High = new Preset(1530,0,0.4); // preset for scoring a specemin on the high bar
 
     }
 }

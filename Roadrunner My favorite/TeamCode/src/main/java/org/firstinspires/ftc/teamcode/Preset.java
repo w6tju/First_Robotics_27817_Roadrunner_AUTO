@@ -6,7 +6,7 @@ public class Preset {
         Viperslide = viperslide;
         Wrist = wrist;
     }
-    int Arm;
-    int Viperslide;
-    double Wrist;
+    public int Arm;
+    public int Viperslide;
+    public double Wrist;
 }

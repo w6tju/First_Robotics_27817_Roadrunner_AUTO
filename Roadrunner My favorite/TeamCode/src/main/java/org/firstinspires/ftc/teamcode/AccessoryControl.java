@@ -51,6 +51,8 @@ public class AccessoryControl {
     boolean B_Pressed = false;
     boolean A_Pressed = false;
     boolean Mode_Pressed = false;
+    boolean driverRumble = false;
+    Gamepad driveController;
 
     public AccessoryControl(HardwareMap hardwareMap,boolean AUTO) {
         //region Hardware
@@ -84,9 +86,11 @@ public class AccessoryControl {
         //endregion
     }
     public void atStart() {
-        wrist.setPosition(.05);
+        wrist.setPosition(1);
     }
-    public void RunAccessory(Gamepad gamepad1) {
+    public void RunAccessory(Gamepad gamepad1, Gamepad driver) {
+        driveController = driver;
+
         //region Arm position
         if (gamepad1.left_trigger > 0){Arm_Pos -= Arm_increment;}
         if (gamepad1.right_trigger > 0){Arm_Pos += Arm_increment;}
@@ -169,11 +173,23 @@ public class AccessoryControl {
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (Arm_Pos > 2480) {
-            wrist.setPosition(.8);
             WHEEL_SPEED = -1;
+            if (!driverRumble) {
+                driverRumble = true;
+                driveController.rumble(500);
+            }
+            if (Arm_Pos > 4480) {
+                wrist.setPosition(.8);
+            } else {
+                wrist.setPosition(1);
+            }
         }
         else {
             WHEEL_SPEED = 1;
+            if (driverRumble) {
+                driverRumble = false;
+                driveController.rumble(500);
+            }
         }
         //endregion
 
@@ -223,7 +239,7 @@ public class AccessoryControl {
             if (Intake_speed != 0) {
                 ElapsedTime Intake_Timeout = new ElapsedTime();
                 Intake_Timeout.reset();
-                while (Intake_Timeout.seconds() <  2) {
+                while (Intake_Timeout.seconds() <  1.5) {
                     Intake_Timeout.log("Intake Running for: ");
                 }
                 intake_Left.setPower(0);

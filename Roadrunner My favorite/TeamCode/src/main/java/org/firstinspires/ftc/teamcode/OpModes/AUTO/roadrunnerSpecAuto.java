@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.rrActions;
 import java.util.ServiceConfigurationError;
 import java.util.concurrent.CompletableFuture;
 
-@Autonomous()
+@Autonomous(preselectTeleOp = "MecanumTeleOp")
 public class roadrunnerSpecAuto extends LinearOpMode {
     //Hybrid Telemetry
     Telemetry Telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -39,12 +39,12 @@ public class roadrunnerSpecAuto extends LinearOpMode {
     public void runOpMode() {
         accessoryControl = new AccessoryControl(hardwareMap,true);
         rrActions = new rrActions(accessoryControl);
-        MecanumDrive drive = new MecanumDrive(hardwareMap,new Pose2d(20, -61.9, Math.toRadians(90)));
+        MecanumDrive drive = new MecanumDrive(hardwareMap,new Pose2d(20, -62, Math.toRadians(90)));
 
         Action preload = drive.actionBuilder(new Pose2d(20, -62, Math.toRadians(90)))
-                .strafeTo(new Vector2d(0,-34.4), new TranslationalVelConstraint(45)) //Preload  Specimen
+                .strafeTo(new Vector2d(0,-33.4), new TranslationalVelConstraint(45)) //Preload  Specimen
                 .stopAndAdd(rrActions.hangSpecimen())
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
                 .stopAndAdd(rrActions.exhaust())
                 .strafeTo(new Vector2d(0,-56))
                 .build();
@@ -54,12 +54,12 @@ public class roadrunnerSpecAuto extends LinearOpMode {
                 .build();
         Action sample1 = drive.actionBuilder(new Pose2d(47,-10,Math.toRadians(90)))
                 .strafeTo(new Vector2d(52.1,-10.32)) //Sample 1
-                .strafeTo(new Vector2d(51.33,-58.5))
+                .strafeTo(new Vector2d(51.33,-58))
                 .strafeTo(new Vector2d(52.,-10.3))
                 .build();
         Action sample2 = drive.actionBuilder(new Pose2d(46,-10,Math.toRadians(90)))
-                .strafeTo(new Vector2d(61.45,-10.35), new TranslationalVelConstraint(30)) //Sample 2
-                .strafeTo(new Vector2d(61.45,-58.5))
+                .strafeTo(new Vector2d(61.6,-10.35), new TranslationalVelConstraint(30)) //Sample 2
+                .strafeTo(new Vector2d(61.6,-58))
                 .strafeToLinearHeading(new Vector2d(50.45,-5.35),Math.toRadians(180))
                 .build();
         Action sample3 = drive.actionBuilder(new Pose2d(50,-10,Math.toRadians(180)))
@@ -67,45 +67,46 @@ public class roadrunnerSpecAuto extends LinearOpMode {
                 .strafeTo(new Vector2d(70.40,-65.83))
                 .strafeTo(new Vector2d(67.28,-20.5))
                 .build();
-        Action specimen1 = drive.actionBuilder(new Pose2d(63,-20,Math.toRadians(180)))
+        Action specimen1 = drive.actionBuilder(new Pose2d(63,-25,Math.toRadians(180)))
                 .stopAndAdd(rrActions.intakeSpecimen())
                 .strafeToLinearHeading(new Vector2d(59.58266202697216,-38.55245483577456),pickupHeading)
-                .strafeToLinearHeading(new Vector2d(59.58266202697216,-59),pickupHeading, new TranslationalVelConstraint(30))
-                .waitSeconds(.5)
+                .strafeToLinearHeading(new Vector2d(59.58266202697216,-55),pickupHeading, new TranslationalVelConstraint(30))
+                .waitSeconds(.3)
                 .stopAndAdd(rrActions.intakeSpecimen())
-                .strafeToLinearHeading(new Vector2d(59.58266202697216,-64),pickupHeading, new TranslationalVelConstraint(30))
                 .stopAndAdd(rrActions.intake())
-                .waitSeconds(.2)
+                .strafeToLinearHeading(new Vector2d(59.58266202697216,-64),pickupHeading, new TranslationalVelConstraint(30))
+                .waitSeconds(.1)
                 .stopAndAdd(rrActions.lineupSpecimenHang())
                 .stopAndAdd(rrActions.intake())
-                .waitSeconds(.5)
-                .setTangent(Math.toRadians(135))
-                .strafeToLinearHeading(new Vector2d(7.58266202697216,-55),pickupHeading)
-                .strafeToLinearHeading(new Vector2d(-2.571291340548382,-45.260942531416916),dropHeading)
-                .strafeToLinearHeading(new Vector2d(-2.571291340548382,-26),dropHeading)
+                //.setTangent(Math.toRadians(135))
+                .strafeToLinearHeading(new Vector2d(7.58266202697216,-40),pickupHeading)
+                .strafeToLinearHeading(new Vector2d(-2.571291340548382,-40.260942531416916),dropHeading)
+                .strafeToLinearHeading(new Vector2d(-2.571291340548382,-26.6),dropHeading)
                 .stopAndAdd(rrActions.hangSpecimen())
-                .waitSeconds(0.9)
-                .stopAndAdd(rrActions.exhaust())
+                .waitSeconds(0.2)
                 .stopAndAdd(rrActions.hang())
+                .stopAndAdd(rrActions.exhaust())
                 .build();
         Action specimen2 = drive.actionBuilder(new Pose2d(36,-20,dropHeading))
-                .strafeToLinearHeading(new Vector2d(-2.571291340548382,-37),pickupHeading)
+                .strafeToLinearHeading(new Vector2d(-2.271291340548382,-45),pickupHeading)
+                .strafeToLinearHeading(new Vector2d(-2.271291340548382,-40),pickupHeading)
                 .stopAndAdd(rrActions.intakeSpecimen())
-                .strafeToLinearHeading(new Vector2d(-2.571291340548382,-40),pickupHeading)
-                .strafeToLinearHeading(new Vector2d(85.58266202697216,-69),pickupHeading)
-                .waitSeconds(.5)
+                .strafeToLinearHeading(new Vector2d(85.58266202697216,-68),pickupHeading)
+                .waitSeconds(.3)
                 .stopAndAdd(rrActions.intakeSpecimen())
-                .strafeToLinearHeading(new Vector2d(85.58266202697216,-72),pickupHeading, new TranslationalVelConstraint(30))
+                .stopAndAdd(rrActions.intake())
+                .waitSeconds(.1)
+                .strafeToLinearHeading(new Vector2d(85.58266202697216,-75),pickupHeading, new TranslationalVelConstraint(30))
                 .stopAndAdd(rrActions.intake())
                 .stopAndAdd(rrActions.lineupSpecimenHang())
                 .stopAndAdd(rrActions.intake())
-                .waitSeconds(.5)
-                .strafeToLinearHeading(new Vector2d(7.58266202697216,-55),pickupHeading)
-                .strafeToLinearHeading(new Vector2d(-3.6,-45.260942531416916),dropHeading)
-                .strafeToLinearHeading(new Vector2d(-3.6,-26),dropHeading)
+                .strafeToLinearHeading(new Vector2d(7.58266202697216,-45),pickupHeading)
+                .strafeToLinearHeading(new Vector2d(2,-45.260942531416916),dropHeading)
+                .strafeToLinearHeading(new Vector2d(2,-26.45),dropHeading)
                 .stopAndAdd(rrActions.hangSpecimen())
-                .waitSeconds(0.9)
+                .waitSeconds(0.2)
                 .stopAndAdd(rrActions.exhaust())
+                .strafeToLinearHeading(new Vector2d(2,-36),dropHeading, new TranslationalVelConstraint(200))
                 .build();
         Action specimen3 = drive.actionBuilder(new Pose2d(2,-40,dropHeading))
                 .stopAndAdd(rrActions.intakeSpecimen())
@@ -145,7 +146,6 @@ public class roadrunnerSpecAuto extends LinearOpMode {
                 new SequentialAction(
                         rrActions.lineupSpecimenHang(),
                         preload,
-                        rrActions.hangSpecimen(),
                         beginLineup,
                         sample1,
                         sample2,

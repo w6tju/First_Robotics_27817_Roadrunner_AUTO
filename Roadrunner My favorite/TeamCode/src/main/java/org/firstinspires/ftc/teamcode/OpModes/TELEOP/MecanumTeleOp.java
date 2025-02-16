@@ -60,6 +60,10 @@ public class MecanumTeleOp extends LinearOpMode {
     DcMotor frontRightDrive;
     DcMotor rearLeftDrive;
     DcMotor rearRightDrive;
+    boolean last30 = false;
+    boolean last10 = false;
+    boolean last10Buzz = false;
+    double lastBuzzTime;
 
     @Override
     public void runOpMode() {
@@ -103,9 +107,26 @@ public class MecanumTeleOp extends LinearOpMode {
             //endregion
 
             Mecanum_Movement(Drive,Drift,Turn,(gamepad1.left_trigger>0),(gamepad1.right_trigger>0));
-            accessoryController.RunAccessory(gamepad2);
+            accessoryController.RunAccessory(gamepad2,gamepad1);
             localizer.update();
             Drawing.drawRobot(new Canvas(),localizer.getPose());
+
+            if (runtime.seconds() > 120) {
+                if (!last30) {
+                    last30 = true;
+                    gamepad1.rumble(200);
+                }
+            }
+
+            if (runtime.seconds() > 140) {
+                if (!last10Buzz) {
+                    last10Buzz = true;
+                    gamepad1.rumble(250);
+                    lastBuzzTime = runtime.seconds();
+                } else if (runtime.seconds() >= lastBuzzTime) {
+                    last10Buzz = false;
+                }
+            }
 
             //region Telemetry
             //Telemetry (shows up on driver hub and FTCDashboard)\\
@@ -129,7 +150,7 @@ public class MecanumTeleOp extends LinearOpMode {
         }
     }
 
-    //region Movement
+    //region Movement Mixing
     public void Mecanum_Movement(double Travel,double Strafe,double Rotate, boolean Axial_Rotation, boolean Concerning) {
         //A Drives
         double FL = 0;
@@ -176,5 +197,5 @@ public class MecanumTeleOp extends LinearOpMode {
         rearLeftDrive.setPower(RL);
         rearRightDrive.setPower(RR);
     }
-    //endregion
+    //endregion M
 }

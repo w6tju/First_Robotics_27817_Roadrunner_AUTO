@@ -86,6 +86,8 @@ public class Basic_Auto extends LinearOpMode {
         rearLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        wrist.setPosition(1);
+
         IMU imu = hardwareMap.get(IMU.class,"imu");
         imu.initialize(new IMU.Parameters(
                 new RevHubOrientationOnRobot(
@@ -107,7 +109,7 @@ public class Basic_Auto extends LinearOpMode {
         //Viper_Pos = 0;
         ElapsedTime Move_Timer = new ElapsedTime();
         Move_Timer.reset();
-        Arm_Pos = 1470;
+        Arm_Pos = Presets.Specemin_High.Arm;
         wrist.setPosition(0.4);
         while (Move_Timer.seconds() < 0.94) {
             Mecanum_Movement(0, -0.5, 0, false, false);

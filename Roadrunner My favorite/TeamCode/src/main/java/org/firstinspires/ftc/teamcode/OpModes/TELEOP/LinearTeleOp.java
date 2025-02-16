@@ -94,7 +94,7 @@ public class LinearTeleOp extends LinearOpMode {
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
 
-            accessoryController.RunAccessory(gamepad2);
+            accessoryController.RunAccessory(gamepad2,gamepad1);
             accessoryController.Run_Motors();
 
             //Telemetry (shows up on driver hub)\\

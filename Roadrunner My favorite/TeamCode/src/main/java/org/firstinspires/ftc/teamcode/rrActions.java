@@ -34,7 +34,7 @@ public class rrActions {
     public class hang_Spec implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            RobotCfg.Arm_Pos = 1060;
+            RobotCfg.Arm_Pos = 1020;
             if (accessoryControl.armMotor.getCurrentPosition() < 1060) {return true;}
             return false;
         }
@@ -58,7 +58,7 @@ public class rrActions {
     public class lift_Spec implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            RobotCfg.Arm_Pos = 1049;
+            RobotCfg.Arm_Pos = 1020;
             if (accessoryControl.armMotor.getCurrentPosition() < 1049) {return true;}
             return false;
         }
