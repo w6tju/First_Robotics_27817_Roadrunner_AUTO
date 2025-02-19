@@ -30,24 +30,20 @@
 package org.firstinspires.ftc.teamcode.OpModes.AUTO;
 
 
-import static org.firstinspires.ftc.teamcode.RobotCfg.Arm_Pos;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Viper_Pos;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Arm_Pos;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Viper_Pos;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.AccessoryControl;
-import org.firstinspires.ftc.teamcode.RobotCfg;
+import org.firstinspires.ftc.teamcode.resources.accessoryControl;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -65,7 +61,7 @@ public class Parking_Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        AccessoryControl accessoryControl = new AccessoryControl(hardwareMap,false);
+        accessoryControl accessoryControl = new accessoryControl(hardwareMap,false);
         //MecanumDrive Controller = new MecanumDrive(hardwareMap,new Pose2d(60,60,90));
         //PathConstructor pathConstructor = new PathConstructor(Controller,hardwareMap);
 

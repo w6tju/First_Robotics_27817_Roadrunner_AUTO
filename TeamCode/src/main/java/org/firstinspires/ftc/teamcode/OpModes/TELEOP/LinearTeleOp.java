@@ -29,8 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.OpModes.TELEOP;
 
-import static org.firstinspires.ftc.teamcode.AccessoryControl.*;
-import static org.firstinspires.ftc.teamcode.RobotCfg.*;
+import static org.firstinspires.ftc.teamcode.resources.accessoryControl.*;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.AccessoryControl;
+import org.firstinspires.ftc.teamcode.resources.accessoryControl;
 
 @Disabled
 @TeleOp()
@@ -57,7 +57,7 @@ public class LinearTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        AccessoryControl accessoryController = new AccessoryControl(hardwareMap,false);
+        accessoryControl accessoryController = new accessoryControl(hardwareMap,false);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();

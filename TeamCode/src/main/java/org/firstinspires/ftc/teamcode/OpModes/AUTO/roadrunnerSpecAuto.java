@@ -14,20 +14,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.AccessoryControl;
+import org.firstinspires.ftc.teamcode.resources.accessoryControl;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.RobotCfg.Presets;
-import static org.firstinspires.ftc.teamcode.RobotCfg.*;
+import org.firstinspires.ftc.teamcode.resources.robotCfg.Presets;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.*;
 import org.firstinspires.ftc.teamcode.rrActions;
 
-import java.util.ServiceConfigurationError;
 import java.util.concurrent.CompletableFuture;
 
 @Autonomous(preselectTeleOp = "MecanumTeleOp")
 public class roadrunnerSpecAuto extends LinearOpMode {
     //Hybrid Telemetry
     Telemetry Telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
-    AccessoryControl accessoryControl;
+    org.firstinspires.ftc.teamcode.resources.accessoryControl accessoryControl;
     rrActions rrActions;
     Servo wrist;
     Vector2d prepPickupPose = new Vector2d(46,-55);
@@ -37,7 +36,7 @@ public class roadrunnerSpecAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        accessoryControl = new AccessoryControl(hardwareMap,true);
+        accessoryControl = new accessoryControl(hardwareMap,true);
         rrActions = new rrActions(accessoryControl);
         MecanumDrive drive = new MecanumDrive(hardwareMap,new Pose2d(20, -62, Math.toRadians(90)));
 

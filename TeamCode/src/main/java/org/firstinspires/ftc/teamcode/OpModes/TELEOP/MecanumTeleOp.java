@@ -29,8 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.OpModes.TELEOP;
 
-import static org.firstinspires.ftc.teamcode.RobotCfg.*;
-import static org.firstinspires.ftc.teamcode.AccessoryControl.*;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.*;
+import static org.firstinspires.ftc.teamcode.resources.accessoryControl.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -43,10 +43,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.AccessoryControl;
+import org.firstinspires.ftc.teamcode.resources.accessoryControl;
 import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.ThreeDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.resources.chassisKinematics;
+import org.firstinspires.ftc.teamcode.resources.chassisKinematics.controlRelativity;
+import org.firstinspires.ftc.teamcode.resources.driveKinematicController;
 
 
 @TeleOp()
@@ -56,10 +59,6 @@ public class MecanumTeleOp extends LinearOpMode {
 
     //Declare OpMode members.
     ElapsedTime runtime = new ElapsedTime();
-    DcMotor frontLeftDrive;
-    DcMotor frontRightDrive;
-    DcMotor rearLeftDrive;
-    DcMotor rearRightDrive;
     boolean last30 = false;
     boolean last10 = false;
     boolean last10Buzz = false;
@@ -68,30 +67,11 @@ public class MecanumTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
         ThreeDeadWheelLocalizer localizer = new ThreeDeadWheelLocalizer(hardwareMap, MecanumDrive.PARAMS.inPerTick,new Pose2d(20, -62, Math.toRadians(90)));
-        AccessoryControl accessoryController = new AccessoryControl(hardwareMap,false);
+        accessoryControl accessoryController = new accessoryControl(hardwareMap,false);
+        chassisKinematics chassisKinematics = new chassisKinematics();
+        driveKinematicController controller =  chassisKinematics.getKinematicsController(hardwareMap,controlRelativity.Robot);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        
-        //region Hardware
-        frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        rearLeftDrive = hardwareMap.get(DcMotor.class, "rear_left_drive");
-        rearRightDrive = hardwareMap.get(DcMotor.class, "rear_right_drive");
-        //endregion
-
-        //region Directions
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        rearLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rearRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        //endregion
-
-        //region Zero power
-        frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rearLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rearRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //endregion
 
         //waits for start button on driver hub\\
         waitForStart();
@@ -106,10 +86,9 @@ public class MecanumTeleOp extends LinearOpMode {
             double Turn = gamepad1.right_stick_x * Math.abs(WHEEL_SPEED); // steering input
             //endregion
 
-            Mecanum_Movement(Drive,Drift,Turn,(gamepad1.left_trigger>0),(gamepad1.right_trigger>0));
+            controller.drive(Drive,Drift,Turn);
             accessoryController.RunAccessory(gamepad2,gamepad1);
             localizer.update();
-            Drawing.drawRobot(new Canvas(),localizer.getPose());
 
             if (runtime.seconds() > 120) {
                 if (!last30) {
@@ -131,10 +110,6 @@ public class MecanumTeleOp extends LinearOpMode {
             //region Telemetry
             //Telemetry (shows up on driver hub and FTCDashboard)\\
             Telemetry.addData("Status", "Run Time: " + runtime.toString());
-            //telemetry.addData("Wrist",wrist.getPosition());
-            Telemetry.addData("Motors: ",
-                    "Front left (%.2f), Front right (%.2f), Rear left (%.2f), Rear right (%.2f)",
-                    frontLeftDrive.getPower(),frontRightDrive.getPower(),rearLeftDrive.getPower(),rearRightDrive.getPower());
             Telemetry.addData("Position",localizer.getPose());
             Telemetry.addData("Arm: ",Arm_Pos);
             Telemetry.addData("ViperSlide: ",Viper_Pos);
@@ -144,58 +119,9 @@ public class MecanumTeleOp extends LinearOpMode {
             else {
                 Telemetry.addData("Intake: ","Intaking");
             }
-            Telemetry.addData("Arm_Mode:", AccessoryControl.Arm_Mode);
+            Telemetry.addData("Arm_Mode:", accessoryControl.Arm_Mode);
             Telemetry.update();
             //endregion
         }
     }
-
-    //region Movement Mixing
-    public void Mecanum_Movement(double Travel,double Strafe,double Rotate, boolean Axial_Rotation, boolean Concerning) {
-        //A Drives
-        double FL = 0;
-        double RR = 0;
-
-        //B Drives
-        double FR = 0;
-        double RL = 0;
-
-        if (!Axial_Rotation && !Concerning) {
-            FL = (Strafe - Travel - Rotate);
-            FR = (Strafe + Travel + Rotate);
-            RL = (Strafe + Travel - Rotate);
-            RR = (Strafe - Travel + Rotate);
-        } else {
-            if (Axial_Rotation && !Concerning) {
-                FL = (Strafe - Travel - Rotate);
-                FR = (Strafe + Travel + Rotate);
-                RL = (Strafe + Travel);
-                RR = (Strafe - Travel);
-            }
-            if (Concerning && !Axial_Rotation) {
-                if (Rotate > 0) {
-                    FL = (Strafe - Travel - Rotate);
-                    RL = (Strafe + Travel - Rotate);
-                    FR = (Strafe + Travel);
-                    RR = (Strafe - Travel);
-                } else {
-                    FL = (Strafe - Travel);
-                    RL = (Strafe + Travel);
-                    FR = (Strafe + Travel + Rotate);
-                    RR = (Strafe - Travel + Rotate);
-                }
-            }
-        }
-
-        FL = Range.clip(FL,-1,1);
-        FR = Range.clip(FR,-1,1);
-        RL = Range.clip(RL,-1,1);
-        RR = Range.clip(RR,-1,1);
-
-        frontLeftDrive.setPower(FL);
-        frontRightDrive.setPower(FR);
-        rearLeftDrive.setPower(RL);
-        rearRightDrive.setPower(RR);
-    }
-    //endregion M
 }

@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.resources;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Vector2d;
-import org.firstinspires.ftc.teamcode.Preset;
 
 @Config
-public class RobotCfg {
+public class robotCfg {
     public static double WRIST_DEBUG = 0;
     public static double WHEEL_SPEED = 1; //Maximum wheel speed (used to slow down the robot, or not)
 

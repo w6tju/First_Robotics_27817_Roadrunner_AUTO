@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.resources;
 
-import static org.firstinspires.ftc.teamcode.RobotCfg.Arm_Pos;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Arm_increment;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Max_Arm;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Min_Arm;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Presets;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Viper_Increment;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Viper_Pos;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Viper_maxExtend;
-import static org.firstinspires.ftc.teamcode.RobotCfg.Viper_minExtend;
-import static org.firstinspires.ftc.teamcode.RobotCfg.WHEEL_SPEED;
-import static org.firstinspires.ftc.teamcode.RobotCfg.WRIST_DEBUG;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Arm_Pos;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Arm_increment;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Max_Arm;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Min_Arm;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Presets;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Viper_Increment;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Viper_Pos;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Viper_maxExtend;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Viper_minExtend;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.WHEEL_SPEED;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.WRIST_DEBUG;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,11 +20,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.Preset;
 
 import java.util.concurrent.CompletableFuture;
 
-public class AccessoryControl {
+public class accessoryControl {
     //Enum Classes (Arm Modes)
     public enum Mode {
         SPECEMIN,
@@ -54,7 +53,7 @@ public class AccessoryControl {
     boolean driverRumble = false;
     Gamepad driveController;
 
-    public AccessoryControl(HardwareMap hardwareMap,boolean AUTO) {
+    public accessoryControl(HardwareMap hardwareMap, boolean AUTO) {
         //region Hardware
         armMotor = hardwareMap.get(DcMotor.class, "armMotor"); //Motor defined as "armMotor" in driver hub
         intake_Left = hardwareMap.get(CRServo.class, "intake_Left"); //CRservo defined as "intake_Left" in driver hub

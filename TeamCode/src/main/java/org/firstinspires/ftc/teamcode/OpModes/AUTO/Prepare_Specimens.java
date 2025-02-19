@@ -29,7 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.OpModes.AUTO;
 
-import static org.firstinspires.ftc.teamcode.RobotCfg.Arm_Pos;
+import static org.firstinspires.ftc.teamcode.resources.robotCfg.Arm_Pos;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.AccessoryControl;
+import org.firstinspires.ftc.teamcode.resources.accessoryControl;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -79,7 +79,7 @@ public class Prepare_Specimens extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        AccessoryControl accessoryController = new AccessoryControl(hardwareMap,false);
+        accessoryControl accessoryController = new accessoryControl(hardwareMap,false);
 
         //region Hardware
         frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_left_drive");

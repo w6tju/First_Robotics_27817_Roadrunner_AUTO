@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.resources;
 
 public class Preset {
     public Preset(int arm,int viperslide, double wrist) {
