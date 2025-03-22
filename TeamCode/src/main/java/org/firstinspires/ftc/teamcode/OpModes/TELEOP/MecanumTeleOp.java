@@ -55,7 +55,7 @@ import org.firstinspires.ftc.teamcode.resources.driveKinematicController;
 public class MecanumTeleOp extends LinearOpMode {
     //Hybrid Telemetry
     Telemetry Telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
-
+    boolean loader;
     //Declare OpMode members.
     ElapsedTime runtime = new ElapsedTime();
     boolean last30 = false;
