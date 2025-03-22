@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.CompletableFuture;
 
-public class accessoryControl {
+public class accessoryControlPS4 {
     //Enum Classes (Arm Modes)
     public enum Mode {
         SPECEMIN,
@@ -31,7 +31,7 @@ public class accessoryControl {
     }
 
     //Physical Objects
-    public DcMotor armMotor; //motor in arm tower
+    DcMotor armMotor; //motor in arm tower
     DcMotor viperSlide; //Motor that runs viperslide
     Servo wrist; //wrist servo
     CRServo intake_Left; //intake motor
@@ -53,7 +53,7 @@ public class accessoryControl {
     boolean driverRumble = false;
     Gamepad driveController;
 
-    public accessoryControl(HardwareMap hardwareMap, boolean AUTO) {
+    public accessoryControlPS4(HardwareMap hardwareMap, boolean AUTO) {
         //region Hardware
         armMotor = hardwareMap.get(DcMotor.class, "armMotor"); //Motor defined as "armMotor" in driver hub
         intake_Left = hardwareMap.get(CRServo.class, "intake_Left"); //CRservo defined as "intake_Left" in driver hub
@@ -93,8 +93,8 @@ public class accessoryControl {
         //region Arm position
         if (gamepad1.left_trigger > 0){Arm_Pos -= Arm_increment;}
         if (gamepad1.right_trigger > 0){Arm_Pos += Arm_increment;}
-        if (gamepad1.a) {Arm_Pos = 1040;}
-        if (gamepad1.b) {Arm_ToPos(Presets.Enter_Sub);}
+        if (gamepad1.cross) {Arm_Pos = 1040;}
+        if (gamepad1.circle) {Arm_ToPos(Presets.Enter_Sub);}
         //endregion
 
         //region Viperslide
@@ -113,19 +113,19 @@ public class accessoryControl {
         //endregion
 
         //region Intake
-        if (gamepad1.x && (!X_Pressed)) {
+        if (gamepad1.square && (!X_Pressed)) {
             X_Pressed = true;
             Intake_Active = true;
             Set_intake(1);
         }
-        if (!gamepad1.x && X_Pressed) {X_Pressed = false;}
+        if (!gamepad1.square && X_Pressed) {X_Pressed = false;}
 
-        if (gamepad1.y && (!Y_Pressed)) {
+        if (gamepad1.triangle && (!Y_Pressed)) {
             Y_Pressed = true;
             Intake_Active = false;
             Set_intake(-0.5);
         }
-        if (!gamepad1.y && Y_Pressed) {Y_Pressed = false;}
+        if (!gamepad1.triangle && Y_Pressed) {Y_Pressed = false;}
         //endregion
 
         //region Sweep
@@ -144,7 +144,7 @@ public class accessoryControl {
         //endregion
 
         //region Mode Switching
-        if (gamepad1.guide && (!Mode_Pressed)) {
+        if (gamepad1.options && (!Mode_Pressed)) {
             Mode_Pressed = true;
             //if intake is inactive, activate intake\\
             if (Arm_Mode != Mode.SPECEMIN) {
@@ -155,7 +155,7 @@ public class accessoryControl {
                 Arm_Mode = Mode.SAMPLE;
             }
         }
-        if (!gamepad1.guide && Mode_Pressed) {Mode_Pressed = false;}
+        if (!gamepad1.options && Mode_Pressed) {Mode_Pressed = false;}
         //endregion
 
         Run_Motors(); // we call Run_Motors here so that you dont have to in the op-mode loop

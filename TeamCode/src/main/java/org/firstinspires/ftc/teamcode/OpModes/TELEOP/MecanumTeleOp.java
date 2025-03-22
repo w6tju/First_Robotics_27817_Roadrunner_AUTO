@@ -33,18 +33,16 @@ import static org.firstinspires.ftc.teamcode.resources.robotCfg.*;
 import static org.firstinspires.ftc.teamcode.resources.accessoryControl.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.canvas.Canvas;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.accessoryControl;
-import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.resources.chassisKinematics;
@@ -53,6 +51,7 @@ import org.firstinspires.ftc.teamcode.resources.driveKinematicController;
 
 
 @TeleOp()
+@Config
 public class MecanumTeleOp extends LinearOpMode {
     //Hybrid Telemetry
     Telemetry Telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -63,13 +62,21 @@ public class MecanumTeleOp extends LinearOpMode {
     boolean last10 = false;
     boolean last10Buzz = false;
     double lastBuzzTime;
+    driveKinematicController controller;
+    controlRelativity controlMode;
 
     @Override
     public void runOpMode() {
         ThreeDeadWheelLocalizer localizer = new ThreeDeadWheelLocalizer(hardwareMap, MecanumDrive.PARAMS.inPerTick,new Pose2d(20, -62, Math.toRadians(90)));
         accessoryControl accessoryController = new accessoryControl(hardwareMap,false);
         chassisKinematics chassisKinematics = new chassisKinematics();
-        driveKinematicController controller =  chassisKinematics.getKinematicsController(hardwareMap,controlRelativity.Robot);
+        if (gamepad1.options) {
+            controlMode = controlRelativity.Robot;
+            controller = chassisKinematics.getKinematicsController(hardwareMap, controlRelativity.Robot);
+        } else {
+            controlMode = controlRelativity.Field;
+            controller = chassisKinematics.getKinematicsController(hardwareMap, controlRelativity.Field);
+        }
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -81,36 +88,26 @@ public class MecanumTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             WHEEL_SPEED = Range.clip(WHEEL_SPEED,-1,1);
             //region Inputs
-            double Drive = gamepad1.left_stick_x * WHEEL_SPEED; // forward input
-            double Drift = gamepad1.left_stick_y * WHEEL_SPEED; // strafe input
-            double Turn = gamepad1.right_stick_x * Math.abs(WHEEL_SPEED); // steering input
+            double Drive,Drift,Turn;
+            if (controlMode == controlRelativity.Field) {
+                Drive = gamepad1.left_stick_x * Math.abs(WHEEL_SPEED); // forward input
+                Drift = gamepad1.left_stick_y * Math.abs(WHEEL_SPEED);// strafe input
+            }
+            else {
+                Drive = -gamepad1.left_stick_x * WHEEL_SPEED; // forward input
+                Drift = gamepad1.left_stick_y * WHEEL_SPEED; // strafe input
+            }
+            Turn = -gamepad1.right_stick_x * Math.abs(WHEEL_SPEED);// steering input
             //endregion
 
             controller.drive(Drive,Drift,Turn);
             accessoryController.RunAccessory(gamepad2,gamepad1);
             localizer.update();
 
-            if (runtime.seconds() > 120) {
-                if (!last30) {
-                    last30 = true;
-                    gamepad1.rumble(200);
-                }
-            }
-
-            if (runtime.seconds() > 140) {
-                if (!last10Buzz) {
-                    last10Buzz = true;
-                    gamepad1.rumble(250);
-                    lastBuzzTime = runtime.seconds();
-                } else if (runtime.seconds() >= lastBuzzTime) {
-                    last10Buzz = false;
-                }
-            }
-
             //region Telemetry
             //Telemetry (shows up on driver hub and FTCDashboard)\\
             Telemetry.addData("Status", "Run Time: " + runtime.toString());
-            Telemetry.addData("Position",localizer.getPose());
+            Telemetry.addData("Position: ",localizer.getPose());
             Telemetry.addData("Arm: ",Arm_Pos);
             Telemetry.addData("ViperSlide: ",Viper_Pos);
             if (!Intake_Active) {
@@ -119,7 +116,7 @@ public class MecanumTeleOp extends LinearOpMode {
             else {
                 Telemetry.addData("Intake: ","Intaking");
             }
-            Telemetry.addData("Arm_Mode:", accessoryControl.Arm_Mode);
+            Telemetry.addData("Arm_Mode: ", accessoryControl.Arm_Mode);
             Telemetry.update();
             //endregion
         }

@@ -25,7 +25,7 @@ public class robotCfg {
     //Presets
     @Config
     public static class Presets {
-        public static Preset Specimen_Intake = new Preset(595,0,0.6);
+        public static Preset Specimen_Intake = new Preset(520,0,0.6);
         public static Preset Enter_Sub = new Preset(4490,0,0.5); // preset for intaking a sample (currently certain death)
         public static Preset Basket_Low = new Preset(0,0,0); // preset for scoring in the low basket
         public static Preset Basket_High = new Preset(1525,0,0.5); // preset for scoring in the high basket
