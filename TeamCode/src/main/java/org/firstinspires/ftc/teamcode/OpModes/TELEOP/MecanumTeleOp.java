@@ -63,20 +63,13 @@ public class MecanumTeleOp extends LinearOpMode {
     boolean last10Buzz = false;
     double lastBuzzTime;
     driveKinematicController controller;
-    controlRelativity controlMode;
+    controlRelativity controlMode = controlRelativity.Field;
 
     @Override
     public void runOpMode() {
         ThreeDeadWheelLocalizer localizer = new ThreeDeadWheelLocalizer(hardwareMap, MecanumDrive.PARAMS.inPerTick,new Pose2d(20, -62, Math.toRadians(90)));
         accessoryControl accessoryController = new accessoryControl(hardwareMap,false);
         chassisKinematics chassisKinematics = new chassisKinematics();
-        if (gamepad1.options) {
-            controlMode = controlRelativity.Robot;
-            controller = chassisKinematics.getKinematicsController(hardwareMap, controlRelativity.Robot);
-        } else {
-            controlMode = controlRelativity.Field;
-            controller = chassisKinematics.getKinematicsController(hardwareMap, controlRelativity.Field);
-        }
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -89,18 +82,19 @@ public class MecanumTeleOp extends LinearOpMode {
             WHEEL_SPEED = Range.clip(WHEEL_SPEED,-1,1);
             //region Inputs
             double Drive,Drift,Turn;
+            Turn = -gamepad1.right_stick_x * Math.abs(WHEEL_SPEED);// steering input
             if (controlMode == controlRelativity.Field) {
-                Drive = gamepad1.left_stick_x * Math.abs(WHEEL_SPEED); // forward input
-                Drift = gamepad1.left_stick_y * Math.abs(WHEEL_SPEED);// strafe input
+                Drift = gamepad1.left_stick_x * Math.abs(WHEEL_SPEED); // forward input
+                Drive = gamepad1.left_stick_y * Math.abs(WHEEL_SPEED);// strafe input
+                controller.fieldCentericDrive(Drive,Drift,Turn);
             }
             else {
-                Drive = -gamepad1.left_stick_x * WHEEL_SPEED; // forward input
-                Drift = gamepad1.left_stick_y * WHEEL_SPEED; // strafe input
+                Drift = -gamepad1.left_stick_x * WHEEL_SPEED; // forward input
+                Drive = gamepad1.left_stick_y * WHEEL_SPEED; // strafe input
+                controller.drive(Drive,Drift,Turn); //drive output
             }
-            Turn = -gamepad1.right_stick_x * Math.abs(WHEEL_SPEED);// steering input
             //endregion
 
-            controller.drive(Drive,Drift,Turn);
             accessoryController.RunAccessory(gamepad2,gamepad1);
             localizer.update();
 

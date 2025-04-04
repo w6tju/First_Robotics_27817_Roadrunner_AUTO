@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.ftccommon.internal.manualcontrol.parameters.ImuParameters;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class driveKinematicController {
@@ -38,10 +39,20 @@ public class driveKinematicController {
         rearLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //endregion
+
+        //region IMU
+        imu = hardwareMap.get(IMU.class,"imu");
+        imu.initialize(new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                   RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                   RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
+                )
+            )
+        );
     }
 
 
-    public void drive(double Travel,double Strafe,double Rotate) {
+    public void drive(double x,double y ,double rx) {
         //A Drives
         double FL = 0;
         double RR = 0;
@@ -50,10 +61,10 @@ public class driveKinematicController {
         double FR = 0;
         double RL = 0;
 
-        FL = (Strafe + Travel + Rotate);
-        FR = (Strafe - Travel - Rotate);
-        RL = (Strafe - Travel + Rotate);
-        RR = (Strafe + Travel - Rotate);
+        FL = (y + x + rx);
+        FR = (y - x - rx);
+        RL = (y - x + rx);
+        RR = (y + x - rx);
 
         FL = Range.clip(FL,-1,1);
         FR = Range.clip(FR,-1,1);
@@ -65,30 +76,11 @@ public class driveKinematicController {
         rearLeftDrive.setPower(RL);
         rearRightDrive.setPower(RR);
     }
-}
 
-class fieldcentericDriveKinematics extends driveKinematicController {
-
-    @Override
-    public void init(HardwareMap hardwareMap) {
-        super.init(hardwareMap);
-        imu = hardwareMap.get(IMU.class,"imu");
-        imu.initialize(
-                new IMU.Parameters(
-                        new RevHubOrientationOnRobot(
-                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
-                        )
-                )
-        );
-    }
-
-    @Override
-    public void drive(double travel,double strafe,double Rotate) {
-        //Rotational Matrix
-        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double Travel = travel * Math.cos(-heading) - strafe * Math.sin(-heading);
-        double Strafe = travel * Math.cos(-heading) + strafe * Math.sin(-heading);
-        super.drive(Travel,Strafe,Rotate);
+    public void fieldCentericDrive(double x,double y,double rx) {
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+        drive(rotX,rotY,rx);
     }
 }

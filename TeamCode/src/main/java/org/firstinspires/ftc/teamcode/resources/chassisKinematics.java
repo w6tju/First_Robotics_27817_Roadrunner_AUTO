@@ -15,11 +15,7 @@ public class chassisKinematics {
     }
     public driveKinematicController getKinematicsController(HardwareMap hardwareMap, controlRelativity controlRelativity) {
         driveKinematicController driveController;
-        if (controlRelativity == chassisKinematics.controlRelativity.Field) {
-            driveController = new fieldcentericDriveKinematics();
-        } else {
-            driveController = new driveKinematicController();
-        }
+        driveController = new driveKinematicController();
         driveController.init(hardwareMap);
         return driveController;
     }
