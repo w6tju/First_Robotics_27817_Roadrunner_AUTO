@@ -69,7 +69,8 @@ public class MecanumTeleOp extends LinearOpMode {
     public void runOpMode() {
         ThreeDeadWheelLocalizer localizer = new ThreeDeadWheelLocalizer(hardwareMap, MecanumDrive.PARAMS.inPerTick,new Pose2d(20, -62, Math.toRadians(90)));
         accessoryControl accessoryController = new accessoryControl(hardwareMap,false);
-        chassisKinematics chassisKinematics = new chassisKinematics();
+        controller = new driveKinematicController();
+        controller.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -84,8 +85,8 @@ public class MecanumTeleOp extends LinearOpMode {
             double Drive,Drift,Turn;
             Turn = -gamepad1.right_stick_x * Math.abs(WHEEL_SPEED);// steering input
             if (controlMode == controlRelativity.Field) {
-                Drift = gamepad1.left_stick_x * Math.abs(WHEEL_SPEED); // forward input
-                Drive = gamepad1.left_stick_y * Math.abs(WHEEL_SPEED);// strafe input
+                Drift = -gamepad1.left_stick_y * Math.abs(WHEEL_SPEED); // forward input
+                Drive = gamepad1.left_stick_x * Math.abs(WHEEL_SPEED);// strafe input
                 controller.fieldCentericDrive(Drive,Drift,Turn);
             }
             else {
