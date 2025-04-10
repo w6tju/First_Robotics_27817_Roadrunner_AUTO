@@ -85,7 +85,7 @@ public class MecanumTeleOp extends LinearOpMode {
             double Drive,Drift,Turn;
             Turn = -gamepad1.right_stick_x * Math.abs(WHEEL_SPEED);// steering input
             if (controlMode == controlRelativity.Field) {
-                Drift = gamepad1.left_stick_y * Math.abs(WHEEL_SPEED); // forward input
+                Drift = -gamepad1.left_stick_y * Math.abs(WHEEL_SPEED); // forward input
                 Drive = gamepad1.left_stick_x * Math.abs(WHEEL_SPEED);// strafe input
                 controller.fieldCentericDrive(Drive,Drift,Turn);
             }
